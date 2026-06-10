@@ -273,6 +273,4 @@ tests/
 
 README.md
 
-dbt_project.yml
-* Near real-time reporting
-* Customer segmentation models
+eda_findings.md
