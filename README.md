@@ -38,6 +38,16 @@ The project addresses several common ecommerce analytics challenges:
 
 ## Data Architecture
 
+Raw GA4 Events
+↓
+Staging Layer
+↓
+Intermediate Layer
+↓
+Business Marts
+↓
+BI Dashboard (future stage)
+
 ### Staging Layer
 
 Raw GA4 events are standardized and enriched.
@@ -79,7 +89,7 @@ Purpose:
 
 ### Business Marts
 
-Final analytical datasets optimized for BI reporting.
+The marts layer contains business-ready metrics designed for reporting and decision making.
 
 #### mart_executive_kpi
 
@@ -92,14 +102,14 @@ Executive-level daily performance metrics:
 * Conversion Rate
 * Average Order Value
 
-#### mart_channel_performance
+#### mart_product_performance
 
-Marketing channel analysis:
+Product performance metrics based on deduplicated transactions:
 
-* Sessions
-* Revenue
-* Conversion Rate
-* Transactions
+* product revenue
+* quantity sold
+* average item price
+* transaction metrics
 
 #### mart_funnel
 
@@ -137,6 +147,30 @@ Centralized data quality monitoring:
 * Revenue validation
 * Session anomalies
 * Data freshness checks
+
+---
+
+## Documentation
+
+The project includes dbt documentation generated from model and column metadata.
+
+Documentation covers:
+
+model descriptions
+key business metrics
+column definitions
+data quality tests
+lineage graph showing dependencies between models
+
+Example documentation includes:
+
+model descriptions
+column definitions
+lineage graph
+data relationships
+
+
+The lineage graph provides a visual representation of how raw GA4 events are transformed into analytical datasets and business-ready marts.
 
 ---
 
@@ -236,7 +270,6 @@ models/
 
 tests/
 
-analyses/
 
 README.md
 
