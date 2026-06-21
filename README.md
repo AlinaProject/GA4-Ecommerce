@@ -1,14 +1,22 @@
 # GA4 Ecommerce Analytics Platform
 
-## Project Overview
+End-to-end analytics engineering project built on Google Analytics 4 public e-commerce data:
+BigQuery → dbt → Tableau.
 
-This project demonstrates an end-to-end analytics workflow built on Google Analytics 4 ecommerce data using dbt, BigQuery, SQL, and Tableau.
 
-The goal was to transform raw event-level GA4 data into trusted business metrics, analytical data marts, and executive dashboards while implementing data quality controls and automated testing.
+Dataset: bigquery-public-data.ga4_obfuscated_sample_ecommerce (Nov 2020 – Jan 2021, ~4.3M events, read directly, zero-copy)
+Status: staging + intermediate + marts layers complete, tested, and reconciled to the cent.
 
-The project follows a modern analytics engineering approach:
+What this project demonstrates
 
-GA4 Raw Events → Staging Layer → Intermediate Layer → Business Marts → Tableau Dashboards
+
+* Parsing raw, deeply nested GA4 BigQuery export data (UNNEST'd event params and items arrays)
+* A clean staging → intermediate → marts dbt architecture, with marts consolidated to avoid
+duplicate business logic across dashboards
+* A real, non-trivial data-quality investigation: finding, diagnosing, and fixing a revenue
+discrepancy caused by a non-unique natural key — see Data Quality Deep Dive
+* An automated test suite built around cross-model consistency, not just column-level checks
+* Business-ready marts feeding Tableau dashboards (Executive Overview, Marketing Performance, Funnel)
 
 ---
 
@@ -46,7 +54,7 @@ Intermediate Layer
 ↓
 Business Marts
 ↓
-BI Dashboard (future stage)
+BI Dashboard
 
 ### Staging Layer
 
@@ -55,14 +63,12 @@ Raw GA4 events are standardized and enriched.
 Models:
 
 * stg_ga4__events
-* stg_ga4__purchases
 
 Key transformations:
 
 * Event normalization
 * Channel grouping
 * Data quality flags
-* Purchase deduplication
 * Transaction validation
 
 ---
@@ -187,7 +193,6 @@ Findings:
 * 4,786 purchase events
 * 4,451 unique transactions
 * 335 duplicated purchase events
-* Duplicate rate: 7.0%
 
 Solution:
 
