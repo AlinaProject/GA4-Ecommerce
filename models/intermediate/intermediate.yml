@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: int_purchase_events_deduped
+    description: >
+      Ephemeral модель дедуплікації + розділення purchase-подій. Обробляє
+      два типи DQ-проблем: (1) GTM double-fire — інстант-повтори тієї самої
+      покупки (розрив < 1 год, ідентичні items/revenue) — дедуплікуються в
+      один рядок; (2) transaction_id collision — синтетичний датасет
+      випадково присвоює однаковий ID двом РІЗНИМ реальним покупкам,
+      рознесеним у часі (розрив від 5 днів і більше) — розділяються через
+      синтетичний order_key, обидві покупки зберігаються в revenue.
+    columns:
+      - name: order_key
+        description: >
+          Справжній унікальний ключ замовлення. Дорівнює transaction_id
+          у переважній більшості випадків; для 15 транзакцій з колізією
+          ID додається суфікс _c1/_c2 щоб розділити реальні окремі покупки.
+        data_tests:
+          - not_null
+      - name: transaction_id
+        description: "Сирий ID з GA4 ecommerce.transaction_id. НЕ гарантовано унікальний — для grain використовуй order_key."
+
+  - name: int_sessions
+    description: >
+      Один рядок = одна сесія (user_pseudo_id + ga_session_id).
+      session_revenue і transaction_count тягнуться з fct_orders
+      (структурно гарантована консистентність), не рахуються повторно
+      з сирих подій.
+    columns:
+      - name: session_id
+        description: "concat(user_pseudo_id, '-', ga_session_id)"
+        data_tests:
+          - unique
+          - not_null
+      - name: transaction_count
+        description: "count(distinct order_key) для цієї сесії — НЕ count(distinct transaction_id)."
+      - name: session_revenue
+        description: "sum(revenue) з fct_orders для цієї сесії."
+
+  - name: int_user_metrics
+    description: >
+      Один рядок = один користувач (user_pseudo_id). Lifetime-агрегати:
+      активність, revenue, к-сть покупок, перша атрибуція (first-touch).
+      Не містить сегментування клієнтів — датасет покриває лише 3 місяці, недостатньо для статистично
+      надійних сегментів за частотою покупок.
+    columns:
+      - name: user_pseudo_id
+        data_tests:
+          - unique
+          - not_null
+      - name: purchases
+        description: "sum(transaction_count) по всіх сесіях користувача."
