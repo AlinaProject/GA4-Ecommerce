@@ -20,13 +20,13 @@ The goal of the project was to transform raw GA4 event data into trusted analyti
 Pipeline:
 
 Raw GA4 Events
-      ↓
+        ↓
 Staging Layer
-      ↓
+        ↓
 Intermediate Layer
-      ↓
+        ↓
 Business Marts
-      ↓
+        ↓
 Tableau Dashboards
 
 ---
@@ -75,6 +75,27 @@ The project addresses common ecommerce analytics use cases:
 ---
 
 ## Data Architecture
+
+## Data Architecture
+
+```text
+GA4 Raw Events
+│
+├── stg_ga4__events
+│
+├── int_sessions
+├── int_funnel_steps
+├── int_user_metrics
+│
+├── mart_executive_kpi
+├── mart_daily_performance
+├── mart_funnel
+├── mart_product_performance
+├── mart_retention
+├── mart_user_ltv
+├── mart_data_quality
+│
+└── Tableau Dashboards
 
 ### Staging Layer
 
