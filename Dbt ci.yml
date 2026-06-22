@@ -27,7 +27,8 @@ jobs:
 
       - name: Create temporary profile
         run: |
-          cat > profiles.yml << EOF
+          mkdir -p /home/runner/.dbt
+          cat > /home/runner/.dbt/profiles.yml << EOF
           ga4_analytics:
             target: dev
             outputs:
@@ -42,10 +43,6 @@ jobs:
 
       - name: Install packages
         run: dbt deps
-        env:
-          DBT_PROFILES_DIR: "."
 
       - name: Validate project
         run: dbt parse
-        env:
-          DBT_PROFILES_DIR: "."
