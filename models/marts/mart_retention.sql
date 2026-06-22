@@ -10,13 +10,13 @@ with first_session as (
 
         date_trunc(session_date, month) as cohort_month,
 
-        country,
-        device_category,
-        channel_group,
-        source,
-        medium,
-        browser,
-        os
+        coalesce(country, '(unknown)')         as country,
+        coalesce(device_category, '(unknown)') as device_category,
+        coalesce(channel_group, '(unknown)')   as channel_group,
+        coalesce(source, '(unknown)')          as source,
+        coalesce(medium, '(unknown)')          as medium,
+        coalesce(browser, '(unknown)')         as browser,
+        coalesce(os, '(unknown)')              as os,
 
     from {{ ref('int_sessions') }}
 
@@ -30,11 +30,8 @@ with first_session as (
 user_activity as (
 
     select
-
         s.user_pseudo_id,
-
         f.cohort_month,
-
         f.country,
         f.device_category,
         f.channel_group,
@@ -59,11 +56,8 @@ user_activity as (
 retention as (
 
     select
-
         cohort_month,
-
         month_number,
-
         country,
         device_category,
         channel_group,

@@ -1,0 +1,66 @@
+version: 2
+
+models:
+
+  - name: fct_orders
+    description: >
+      Один рядок = одне реальне замовлення (грануляція = order_key, НЕ
+      transaction_id — натуральний ключ виявився неунікальним, 15
+      колізій ID знайдено й розділено в int_purchase_events_deduped).
+      Єдине джерело правди для revenue в усьому проєкті — всі марти
+      і int_sessions тягнуть revenue звідси.
+    columns:
+      - name: order_key
+        description: "Справжній унікальний ключ замовлення."
+        data_tests:
+          - unique
+          - not_null
+      - name: transaction_id
+        description: "Сирий GA4 ID. НЕ унікальний, лишений для traceability."
+      - name: revenue
+        data_tests:
+          - not_null
+
+  - name: fct_order_items
+    description: >
+      Один рядок = один товар у замовленні (item-грануляція). Дочірня
+      модель fct_orders через UNNEST(items) з тим самим order_key.
+    columns:
+      - name: order_key
+        data_tests:
+          - not_null
+      - name: item_id
+        data_tests:
+          - not_null
+
+  - name: mart_daily_performance
+    description: >
+      Щоденна performance-таблиця з повною дименсійною розбивкою
+      (канал/джерело/пристрій/гео).
+    columns:
+      - name: session_date
+        data_tests:
+          - not_null
+
+  - name: mart_funnel
+    description: >
+      Воронка конверсії по днях з усіма 5 переходами (item→cart→
+      checkout→shipping→payment→purchase). Зберігає видимість
+      payment-кроку — найбільший drop-off за результатами EDA (54%).
+
+  - name: mart_landing_pages
+    description: "Перша сторінка кожної сесії + конверсія. Аналіз вхідних точок трафіку."
+
+  - name: mart_product_performance
+    description: >
+      Performance товарів: revenue, units sold, avg price по категоріях.
+      Джерело — fct_order_items.
+
+  - name: mart_retention
+    description: >
+      Когортний retention за місяцями.
+
+  - name: mart_user_ltv
+    description: >
+      Тонкий шар над int_user_metrics. Lifetime revenue, AOV,
+      активність, перша атрибуція користувача.

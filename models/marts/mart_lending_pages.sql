@@ -1,4 +1,8 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    description  = 'Перша сторінка кожної сесії + конверсія. Аналіз вхідних точок трафіку.'
+
+) }}
 
 with first_page as (
 
@@ -30,14 +34,11 @@ with first_page as (
         language,
 
         row_number() over (
-            partition by
-                user_pseudo_id,
-                ga_session_id
+            partition by user_pseudo_id, ga_session_id
             order by event_timestamp
         ) as rn
 
     from {{ ref('stg_ga4__events') }}
-
     where page_location is not null
 
 ),
@@ -53,17 +54,11 @@ landing_pages as (
 session_metrics as (
 
     select
-
         session_id,
-
         converted,
-
         session_revenue,
-
         transaction_count
-
     from {{ ref('int_sessions') }}
-
 )
 
 select

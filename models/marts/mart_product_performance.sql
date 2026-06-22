@@ -3,7 +3,7 @@
 with purchases as (
 
     select *
-    from {{ ref('stg_ga4__purchases') }}
+    from {{ ref('fct_order_items') }}
 
 )
 
@@ -12,21 +12,16 @@ select
     purchase_date,
     item_id,
     item_name,
-
     item_brand,
-
     category_l1,
     category_l2,
     category_l3,
-
     country,
-
     device_category,
-
     source,
     medium,
 
-    count(distinct transaction_id) as transactions,
+    count(distinct order_key) as transactions,
 
     sum(item_quantity) as units_sold,
 

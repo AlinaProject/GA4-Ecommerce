@@ -24,7 +24,7 @@ duplicate_checks as (
 
     select
 
-        'duplicate_transaction_id' as check_name,
+        'duplicate_transaction_id_before_clustering' as check_name,
 
         count(*) as issue_count,
 
@@ -68,7 +68,7 @@ revenue_checks as (
 
         count(*) as issue_count,
 
-        0 as issue_pct
+        round(100 * count(*) / nullif((select count(*) from {{ ref('stg_ga4__events') }} where is_purchase), 0), 2) as issue_pct
 
     from {{ ref('stg_ga4__events') }}
 
