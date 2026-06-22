@@ -1,0 +1,27 @@
+name: dbt-ci
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+
+  dbt:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+
+      - run: pip install dbt-bigquery
+
+      - run: dbt deps
+
+      - run: dbt parse
+
+      - run: dbt test
