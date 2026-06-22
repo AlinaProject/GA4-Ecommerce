@@ -17,18 +17,6 @@ The goal of the project was to transform raw GA4 event data into trusted analyti
 * data quality monitoring
 * business metric standardization
 
-Pipeline:
-
-Raw GA4 Events
-        ↓
-Staging Layer
-        ↓
-Intermediate Layer
-        ↓
-Business Marts
-        ↓
-Tableau Dashboards
-
 ---
 
 ## Business Objectives
@@ -76,9 +64,6 @@ The project addresses common ecommerce analytics use cases:
 
 ## Data Architecture
 
-## Data Architecture
-
-```text
 GA4 Raw Events
 │
 ├── stg_ga4__events
