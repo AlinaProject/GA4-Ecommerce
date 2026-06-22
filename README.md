@@ -64,23 +64,29 @@ The project addresses common ecommerce analytics use cases:
 
 ## Data Architecture
 
-GA4 Raw Events
-│
-├── stg_ga4__events
-│
-├── int_sessions
-├── int_funnel_steps
-├── int_user_metrics
-│
-├── mart_executive_kpi
-├── mart_daily_performance
-├── mart_funnel
-├── mart_product_performance
-├── mart_retention
-├── mart_user_ltv
-├── mart_data_quality
-│
-└── Tableau Dashboards
+```markdown
+### Data Pipeline
+
+```mermaid
+graph TD
+    Raw[GA4 Raw Events] --> Stg[stg_ga4__events]
+    
+    Stg --> Int1[int_sessions]
+    Stg --> Int2[int_funnel_steps]
+    Stg --> Int3[int_user_metrics]
+    
+    Int1 & Int2 & Int3 --> Mart1[mart_executive_kpi]
+    Int1 & Int2 & Int3 --> Mart2[mart_daily_performance]
+    Int1 & Int2 & Int3 --> Mart3[mart_funnel]
+    Int1 & Int2 & Int3 --> Mart4[mart_product_performance]
+    Int1 & Int2 & Int3 --> Mart5[mart_retention]
+    Int1 & Int2 & Int3 --> Mart6[mart_user_ltv]
+    Int1 & Int2 & Int3 --> Mart7[mart_data_quality]
+    
+    Mart1 & Mart2 & Mart3 & Mart4 & Mart5 & Mart6 & Mart7 --> Tableau[(Tableau Dashboards)]
+    
+    style Raw fill:#f9f,stroke:#333,stroke-width:2px
+    style Tableau fill:#bbf,stroke:#333,stroke-width:2px
 
 ### Staging Layer
 
@@ -391,10 +397,12 @@ CI/CD is implemented using GitHub Actions.
 Every push and pull request automatically runs:
 * dbt parse
 * dbt build
-* dbt tests
 * source freshness checks
 
 This ensures that new changes do not break model dependencies or data quality validations.
+
+<img width="162" height="208" alt="image" src="https://github.com/user-attachments/assets/45017e79-afbe-4349-8f02-8f4b26025127" />
+
 
 ### Documentation
 
