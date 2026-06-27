@@ -408,18 +408,3 @@ dbt documentation includes:
 <img width="1602" height="696" alt="image" src="https://github.com/user-attachments/assets/477ce34a-2160-41eb-a49b-44d8381e4208" />
 
 The lineage graph visualizes how raw GA4 events are transformed into reporting-ready analytical datasets.
-
-### Key Skills Demonstrated
-* Analytics Engineering
-* SQL Development
-* Data Modeling
-* dbt
-* BigQuery
-* Data Quality Monitoring
-* Revenue Reconciliation
-* Funnel Analytics
-* Cohort Analysis
-* Customer Lifetime Value Analysis
-* Marketing Attribution
-* CI/CD
-* Source Freshness Monitoring
