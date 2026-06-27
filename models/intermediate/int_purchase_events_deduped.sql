@@ -1,6 +1,6 @@
 {{
   config(
-    materialized = 'ephemeral',
+    materialized = 'view',
     description  = 'ЄДИНЕ місце обробки purchase events. Розділяє GTM double-fire (інстант повтори, дедуплікуються) і transaction_id collision (реальні різні покупки з однаковим ID, рознесені у часі — зберігаються окремо з новим order_key).'
   )
 }}
