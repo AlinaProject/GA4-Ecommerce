@@ -1,6 +1,6 @@
 {{
   config(
-    materialized = 'table',
+    materialized = 'view',
     description  = 'Один рядок = один користувач. Lifetime-агрегати з int_sessions (НЕ перераховує revenue/purchases з fct_orders напряму — щоб не повторити transaction_id-баг).'
   )
 }}
