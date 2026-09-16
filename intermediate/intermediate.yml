@@ -1,0 +1,359 @@
+version: 2
+
+models:
+  - name: int_sessions
+    description: >
+      Session-level intermediate model built from GA4 event data.
+      One row represents one GA4 session.
+
+    columns:
+
+      - name: session_id
+        description: "Technical identifier of the GA4 session."
+        tests:
+          - not_null
+          - unique
+
+      - name: user_pseudo_id
+        description: "GA4 pseudo identifier of the user."
+        tests:
+          - not_null
+
+      - name: ga_session_id
+        description: "GA4 session identifier."
+        tests:
+          - not_null
+
+      - name: session_number
+        description: "Sequential session number for the user."
+
+      - name: session_start_at
+        description: "Timestamp of the first event in the session."
+        tests:
+          - not_null
+
+      - name: session_end_at
+        description: "Timestamp of the last event in the session."
+        tests:
+          - not_null
+
+      - name: session_date
+        description: "Date of the first event in the session."
+        tests:
+          - not_null
+
+      - name: session_duration_min
+        description: "Session duration in minutes."
+        tests:
+          - not_null
+
+      - name: session_attribution
+        description: >
+          First non-null event-level source, medium, and campaign
+          observed within the session.
+
+      - name: device_category
+        description: "First non-null device category observed in the session."
+
+      - name: os
+        description: "First non-null operating system observed in the session."
+
+      - name: browser
+        description: "First non-null browser observed in the session."
+
+      - name: continent
+        description: "First non-null continent observed in the session."
+
+      - name: country
+        description: "First non-null country observed in the session."
+
+      - name: region
+        description: "First non-null region observed in the session."
+
+      - name: city
+        description: "First non-null city observed in the session."
+
+      - name: total_events
+        description: "Total number of events in the session."
+        tests:
+          - not_null
+
+      - name: pageviews
+        description: "Number of page_view events in the session."
+        tests:
+          - not_null
+
+      - name: item_views
+        description: "Number of view_item events in the session."
+        tests:
+          - not_null
+
+      - name: engaged_events
+        description: "Number of engaged events in the session."
+        tests:
+          - not_null
+
+      - name: add_to_cart_count
+        description: "Number of add_to_cart events in the session."
+        tests:
+          - not_null
+
+      - name: checkouts
+        description: "Number of begin_checkout events in the session."
+        tests:
+          - not_null
+
+      - name: purchase_events_raw
+        description: "Number of raw purchase events in the session."
+        tests:
+          - not_null
+
+      - name: total_engagement_msec
+        description: "Total engagement time in milliseconds."
+        tests:
+          - not_null
+
+      - name: reached_item_view
+        description: "Whether the session reached the item view stage."
+        tests:
+          - not_null
+
+      - name: reached_cart
+        description: "Whether the session reached the cart stage."
+        tests:
+          - not_null
+
+      - name: reached_checkout
+        description: "Whether the session reached the checkout stage."
+        tests:
+          - not_null
+
+      - name: reached_shipping
+        description: "Whether the session reached the shipping stage."
+        tests:
+          - not_null
+
+      - name: reached_payment
+        description: "Whether the session reached the payment stage."
+        tests:
+          - not_null
+
+      - name: reached_purchase
+        description: "Whether the session reached the purchase stage."
+        tests:
+          - not_null
+
+      - name: is_high_event_session
+        description: "Whether the session contains more than 200 events."
+
+      - name: is_impossible_duration
+        description: "Whether the session duration exceeds 24 hours."
+
+      - name: is_first_visit_session
+        description: "Whether the session contains a first_visit event."
+
+      - name: has_gdpr_deleted
+        description: "Whether the session contains a data-deleted event."
+
+      - name: has_self_referral
+        description: "Whether the session contains a self-referral."
+
+
+
+  - name: int_purchase_events_resolved
+    description: >
+      Intermediate model containing purchase events with transaction IDs,
+      purchase event classification, transaction reuse detection,
+      order clustering, and canonical purchase identification.
+
+    columns:
+
+      - name: event_date
+        description: "GA4 event date in YYYYMMDD format."
+
+      - name: event_date_dt
+        description: "GA4 event date converted to DATE."
+
+      - name: event_at
+        description: "Event timestamp converted to TIMESTAMP."
+
+      - name: event_timestamp
+        description: "Original GA4 event timestamp in microseconds."
+
+      - name: event_name
+        description: "GA4 event name."
+
+      - name: event_previous_timestamp
+        description: "Previous event timestamp provided by GA4."
+
+      - name: event_bundle_sequence_id
+        description: "Sequence identifier of the event within the uploaded event bundle."
+
+      - name: event_server_timestamp_offset
+        description: "Offset between the event timestamp and the server receipt timestamp."
+
+      - name: user_first_touch_at
+        description: "Timestamp of the user's first recorded touch."
+
+      - name: user_pseudo_id
+        description: "GA4 pseudonymous user identifier."
+
+      - name: user_id
+        description: "Authenticated user identifier when available."
+
+      - name: platform
+        description: "Platform from which the event originated."
+
+      - name: has_null_user_pseudo_id
+        description: "Indicates whether user_pseudo_id is missing."
+
+      - name: ga_session_id
+        description: "GA4 session identifier."
+
+      - name: session_number
+        description: "Sequential number of the user's session."
+
+      - name: session_key
+        description: "Stable hashed identifier combining user_pseudo_id and ga_session_id."
+
+      - name: page_location
+        description: "Page URL associated with the event."
+
+      - name: page_title
+        description: "Page title associated with the event."
+
+      - name: page_referrer
+        description: "Referring page URL associated with the event."
+
+      - name: session_engaged_raw
+        description: "Raw GA4 session_engaged event parameter."
+
+      - name: engagement_time_msec
+        description: "Engagement time associated with the event in milliseconds."
+
+      - name: event_source
+        description: "Event-level traffic source."
+
+      - name: event_medium
+        description: "Event-level traffic medium."
+
+      - name: event_campaign
+        description: "Event-level traffic campaign."
+
+      - name: first_touch_source
+        description: "First-touch traffic source."
+
+      - name: first_touch_medium
+        description: "First-touch traffic medium."
+
+      - name: first_touch_campaign
+        description: "First-touch traffic campaign."
+
+      - name: device_category
+        description: "Device category used for the event."
+
+      - name: os
+        description: "Operating system of the device."
+
+      - name: browser
+        description: "Browser used for the event."
+
+      - name: language
+        description: "Device language."
+
+      - name: continent
+        description: "User continent."
+
+      - name: country
+        description: "User country."
+
+      - name: region
+        description: "User region."
+
+      - name: city
+        description: "User city."
+
+      - name: transaction_id_raw
+        description: "Original ecommerce transaction ID provided by GA4."
+
+      - name: transaction_id_normalized
+        description: "Normalized transaction ID used for purchase matching and clustering."
+
+      - name: purchase_revenue
+        description: "Purchase revenue in the property's reporting currency."
+
+      - name: purchase_revenue_usd
+        description: "Purchase revenue converted to USD."
+
+      - name: tax_value
+        description: "Tax amount associated with the purchase."
+
+      - name: shipping_value
+        description: "Shipping amount associated with the purchase."
+
+      - name: unique_items
+        description: "Number of unique items associated with the purchase."
+
+      - name: items
+        description: "Array of ecommerce items associated with the purchase event."
+
+      - name: event_fingerprint
+        description: >
+          Technical event fingerprint generated from user, timestamp,
+          event name, and session. Not guaranteed to be globally unique.
+
+      - name: is_purchase
+        description: "Indicates whether the event is a purchase event."
+
+      - name: is_engaged_session_event
+        description: "Indicates whether the event belongs to an engaged session."
+
+      - name: flag_missing_transaction_id
+        description: "Indicates a purchase event with a missing transaction ID."
+
+      - name: flag_null_purchase_revenue
+        description: "Indicates a purchase event with missing purchase revenue."
+
+      - name: flag_negative_purchase_revenue
+        description: "Indicates a purchase event with negative purchase revenue."
+
+      - name: flag_missing_session_id
+        description: "Indicates an event with a missing GA4 session ID."
+
+      - name: flag_self_referral
+        description: "Indicates a first-touch self-referral from the website."
+
+      - name: flag_event_self_referral
+        description: "Indicates an event-level self-referral from the website."
+
+      - name: flag_data_deleted
+        description: "Indicates that the first-touch source was marked as data deleted."
+
+      - name: seconds_since_prev_event
+        description: >
+          Number of seconds between the current purchase event and the
+          previous purchase event with the same normalized transaction ID.
+
+      - name: purchase_event_type
+        description: >
+          Classification of the purchase event as original_purchase,
+          duplicate_event, or reused_transaction_id.
+
+      - name: is_new_order_cluster
+        description: >
+          Indicates whether the purchase event starts a new order cluster
+          based on the transaction ID and the one-hour time threshold.
+
+      - name: order_cluster
+        description: >
+          Sequential cluster number assigned to purchase events sharing
+          the same normalized transaction ID.
+
+      - name: order_key
+        description: >
+          Resolved order identifier that separates reused transaction IDs
+          into distinct order clusters.
+
+      - name: is_canonical_purchase
+        description: >
+          Indicates the first purchase event within each resolved order_key.
