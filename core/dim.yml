@@ -1,0 +1,122 @@
+version: 2
+
+models:
+
+  - name: dim_product
+    description: >
+      Product dimension.
+      One row = one unique product_id.
+      Product attributes represent the latest observed purchase
+      for the product.
+
+    columns:
+
+    - name: product_key
+      description: "Deterministic surrogate key generated from product_id."
+      tests:
+        - not_null
+        - unique
+
+    - name: product_id
+      description: "GA4 product/item identifier."
+      tests:
+        - not_null
+        - unique
+
+    - name: product_name
+      description: "Product name."
+
+    - name: item_brand
+      description: "Product brand."
+
+    - name: item_variant
+      description: "Product variant."
+
+    - name: item_category
+      description: "Raw product category."
+
+    - name: category_l1
+      description: "First category level."
+
+    - name: category_l2
+      description: "Second category level."
+
+    - name: category_l3
+      description: "Third category level."
+
+  - name: dim_geo
+    description: >
+      Geography dimension.
+      One row = one unique continent / country / region / city combination.
+
+    columns:
+
+    - name: geo_key
+      description: "Deterministic surrogate key for geographic attributes."
+      tests:
+      - not_null
+      - unique
+
+    - name: continent
+      description: "Continent."
+
+    - name: country
+      description: "Country."
+
+    - name: region
+      description: "Region or state."
+
+    - name: city
+      description: "City."
+
+  - name: dim_device
+    description: >
+      Device dimension.
+      One row = one unique device category / OS / browser combination.
+
+    columns:
+
+    - name: device_key
+      description: "Deterministic surrogate key for device attributes."
+      tests: 
+        - not_null
+        - unique
+
+    - name: device_category
+      description: "GA4 device category."
+
+    - name: os
+      description: "Operating system."
+
+    - name: browser
+      description: "Browser."
+
+  - name: dim_attribution
+    description: >
+      Attribution dimension.
+      One row = one unique source / medium / campaign combination.
+      Includes combinations observed in resolved orders, first-touch event data, and session attribution.
+
+    columns:
+
+    - name: attribution_key
+      description: >
+        Deterministic surrogate key generated from source,
+        medium, and campaign.
+      tests:
+        - not_null
+        - unique
+
+    - name: source
+      description: "Attribution source."
+
+    - name: medium
+      description: "Attribution medium."
+
+    - name: campaign
+      description: "Attribution campaign."
+
+    - name: channel_group
+      description: "Derived marketing channel grouping."
+      tests:
+        - not_null

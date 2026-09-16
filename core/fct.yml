@@ -1,0 +1,341 @@
+version: 2
+
+models:
+  - name: fct_sessions
+    description: >
+      One row = one resolved GA4 session.
+      Session behavior and funnel metrics come from int_sessions.
+      Revenue and transaction_count come exclusively from fct_orders.
+
+    columns:
+
+      - name: session_id
+        description: >
+          Globally unique session identifier generated from
+          user_pseudo_id and ga_session_id.
+        tests:
+          - not_null
+          - unique
+
+      - name: user_pseudo_id
+        description: "GA4 pseudonymous user identifier"
+        tests: 
+          - not_null
+
+      - name: ga_session_id
+        description: "GA4 native session identifier."
+        tests: 
+          - not_null
+
+      - name: session_number
+        description: "Session sequence number for the user."
+
+      - name: session_start_at
+        description: "Timestamp of the first event in the session."
+        tests: 
+          - not_null
+
+      - name: session_end_at
+        description: "Timestamp of the last event in the session."
+        tests: 
+          - not_null
+
+      - name: session_date
+        description: "Calendar date of the session."
+        tests: 
+          - not_null
+
+      - name: session_duration_min
+        description: "Session duration in minutes."
+
+      - name: geo_key
+        description: "Foreign key to dim_geo."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geo')
+                field: geo_key
+
+      - name: device_key
+        description: "Foreign key to dim_device."
+        tests: 
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_device')
+                field: device_key
+         
+      - name: session_attribution_key
+        description: "Foreign key to dim_attribution."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_attribution')
+                field: attribution_key
+
+      - name: total_events
+        description: "Total number of events in the session."
+        tests: 
+          - not_null
+
+      - name: pageviews
+        description: "Number of page_view events in the session."
+        tests: 
+          - not_null
+
+      - name: item_views
+        description: "Number of view_item events in the session."
+        tests: 
+          - not_null
+
+      - name: engaged_events
+        description: "Number of engaged events in the session."
+        tests: 
+          - not_null
+
+      - name: add_to_cart_count
+        description: "Number of add_to_cart events in the session."
+        tests: 
+          - not_null
+
+      - name: checkouts
+        description: "Number of begin_checkout events in the session."
+        tests: 
+          - not_null
+
+      - name: purchase_events_raw
+        description: >
+          Raw purchase event count.
+          DQ metric only and not the source of truth for transactions
+          or revenue.
+        tests: 
+          - not_null
+
+      - name: total_engagement_msec
+        description: "Total GA4 engagement time in milliseconds."
+        tests: 
+          - not_null
+
+      - name: reached_item_view
+        description: "Whether the session reached an item view."
+
+      - name: reached_cart
+        description: "Whether the session reached add to cart."
+
+      - name: reached_checkout
+        description: "Whether the session reached checkout."
+
+      - name: reached_shipping
+        description: "Whether the session reached shipping information."
+
+      - name: reached_payment
+        description: "Whether the session reached payment information."
+
+      - name: reached_purchase
+        description: "Whether a raw purchase event occurred in the session."
+
+      - name: transaction_count
+        description: >
+          Number of resolved business orders attributed to the session.
+          Source of truth is fct_orders.
+        tests: 
+          - not_null
+
+      - name: session_revenue
+        description: >
+          Total resolved business order revenue attributed to the session.
+          Source of truth is fct_orders.
+
+      - name: converted
+        description: >
+            True when the session contains at least one resolved business order.
+        tests: 
+          - not_null
+
+      - name: is_single_event_or_zero_duration
+        description: >
+          Semantic replacement for bounce.
+          True when the session has one event or zero-minute duration.
+
+      - name: engagement_minutes
+        description: "Session engagement time converted to minutes."
+
+      - name: session_quality
+        description: >
+          Session quality classification: normal, suspicious, or invalid.
+      
+      - name: duration_bucket
+        description: "Session duration bucket."
+
+      - name: is_clean_session
+        description: >
+          True when the session is neither high-event nor
+          impossible-duration.
+
+  - name: fct_orders
+    description: >
+      One row = one resolved business order.
+      Only canonical purchases and valid repeated transaction IDs
+      create rows in this fact.
+      Duplicate purchase events and invalid transaction IDs are excluded.
+
+    columns:
+
+      - name: order_key
+        description: >
+          Unique resolved business order identifier.
+          Canonical orders use transaction_id_normalized where safe.
+          Reused transaction IDs receive a composite order key.
+        tests:
+          - not_null
+          - unique
+
+      - name: transaction_id_normalized
+        description: "Normalized GA4 transaction identifier."
+        tests: 
+          - not_null
+
+      - name: order_date
+        description: "Calendar date of the resolved order."
+        tests: 
+          - not_null
+
+      - name: order_at
+        description: "Timestamp of the resolved order."
+        tests: 
+          - not_null
+
+      - name: user_pseudo_id
+        description: "GA4 pseudonymous user identifier."
+        tests: 
+          - not_null
+
+      - name: session_id
+        description: "Session identifier associated with the order."
+        tests: 
+          - not_null
+
+      - name: ga_session_id
+        description: "GA4 native session identifier."
+
+      - name: event_source
+        description: "Source associated with the resolved purchase event."
+
+      - name: event_medium
+        description: "Medium associated with the resolved purchase event."
+
+      - name: event_campaign
+        description: "Campaign associated with the resolved purchase event."
+
+      - name: first_touch_source
+        description: "First-touch source for the user."
+
+      - name: first_touch_medium
+        description: "First-touch medium for the user."
+
+      - name: first_touch_campaign
+        description: "First-touch campaign for the user."
+
+      - name: geo_key
+        description: "Foreign key to dim_geo."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geo')
+                field: geo_key
+
+      - name: device_key
+        description: "Foreign key to dim_device."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_device')
+                field: device_key
+         
+      - name: attribution_key
+        description: "Foreign key to dim_attribution."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_attribution')
+                field: attribution_key
+
+      - name: first_touch_attribution_key
+        description: >
+          Foreign key to dim_attribution representing first-touch attribution.
+        tests:
+          - not_null
+       
+      - name: purchase_revenue
+        description: "Resolved order revenue."
+        tests: 
+          - not_null
+
+      - name: purchase_revenue_usd
+        description: "Resolved order revenue converted to USD."
+
+      - name: tax_value
+        description: "Tax amount associated with the order."
+
+      - name: shipping_value
+        description: "Shipping amount associated with the order."
+
+      - name: unique_items
+        description: "Number of unique items reported by the purchase event."
+
+      - name: purchase_event_type
+        description: "Purchase resolution classification."
+
+      - name: resolution_reason
+        description: "Reason why the purchase event was resolved as an order."
+
+      - name: purchase_instance_number
+        description: "Purchase instance number within transaction/user/session scope."
+        tests: 
+          - not_null
+
+      - name: transaction_purchase_events_raw
+        description: "Number of raw purchase events sharing the normalized transaction ID."
+
+      - name: transaction_users
+        description: "Number of distinct users associated with the normalized transaction ID."
+
+      - name: transaction_sessions
+        description: "Number of distinct sessions associated with the normalized transaction ID."
+
+      - name: technical_event_fingerprint
+        description: "Technical fingerprint of the source purchase event."
+        tests: 
+          - not_null
+
+  - name: fct_order_items
+    description: >
+      One row = one item within one resolved business order.
+      Only order-creating purchase events are unnested.
+
+    columns:
+
+      - name: order_item_key
+        description: "Unique surrogate key for an order item."
+        tests:
+          - not_null
+          - unique
+
+      - name: order_key
+        description: "Foreign key to fct_orders."
+        tests:
+          - not_null
+
+      - name: product_key
+        description: "Foreign key to dim_product."
+        tests: 
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
