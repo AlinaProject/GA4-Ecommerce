@@ -1,0 +1,28 @@
+version: 2
+
+models:
+
+- name: stg_ga4__events
+  description: "Staging layer for GA4 events from the public ecommerce dataset."
+
+  columns:
+
+  - name: event_date_dt
+    description: "Parsed event date."
+
+  - name: event_name
+    description: "GA4 event name."
+
+  - name: user_pseudo_id
+    description: "Anonymous user identifier."
+
+  - name: ga_session_id
+    description: "GA4 session identifier."
+    
+
+  - name: transaction_id
+    description: "Purchase transaction identifier."
+
+  - name: purchase_revenue
+    description: "Revenue recorded on purchase events."
+
