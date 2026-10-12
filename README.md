@@ -9,15 +9,15 @@ Status: Production-style analytics pipeline with testing, data quality monitorin
 ## Project Overview
 
 The goal of the project was to transform raw GA4 event data into a canonical analytics model for:
-    * sessions; 
-    * orders; 
-    * order items; 
-    * products; 
-    * revenue; 
-    * attribution; 
-    * funnel; 
-    * data quality; 
-    * reconciliation. 
+* sessions; 
+* orders; 
+* order items; 
+* products; 
+* revenue; 
+* attribution; 
+* funnel; 
+* data quality; 
+* reconciliation. 
 
 ---
 
@@ -292,6 +292,6 @@ dbt documentation includes:
 * business definitions
 * test coverage
 
-<img width="1102" height="666" alt="graph" src="https://github.com/user-attachments/assets/54541a73-270a-4635-91e4-8f2c287bd9b9" />
+<img width="1102" height="666" alt="graph" src="https://github.com/user-attachments/assets/d0380c81-f860-4e51-a386-86e6429ed1f7" />
 
 The lineage graph visualizes how raw GA4 events are transformed into reporting-ready analytical datasets.
